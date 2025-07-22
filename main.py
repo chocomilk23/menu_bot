@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 TOKEN = os.getenv("DISCORD_TOKEN")
-RAILWAY_URL = os.getenv("RAILWAY_URL")
+RENDER_URL = os.getenv("RENDER_URL")
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -96,9 +96,9 @@ async def ping_self():
     await client.wait_until_ready()
     while not client.is_closed():
         try:
-            if RAILWAY_URL:
+            if RENDER_URL:
                 async with aiohttp.ClientSession() as session:
-                    await session.get(f"{RAILWAY_URL}/health")
+                    await session.get(f"{RENDER_URL}/health")
         except Exception as e:
             print(f"[Ping 오류] {e}")
         await asyncio.sleep(180)  # 3분마다
