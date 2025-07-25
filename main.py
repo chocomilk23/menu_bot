@@ -33,6 +33,13 @@ def save_menu():
 
 menu_list = load_menu()
 
+MAX_MSG_LEN = 1900  # 디스코드 메시지 제한보다 살짝 여유
+
+async def send_long_message(channel, text):
+    chunks = [text[i:i+MAX_MSG_LEN] for i in range(0, len(text), MAX_MSG_LEN)]
+    for chunk in chunks:
+        await channel.send(chunk)
+
 @client.event
 async def on_ready():
     print(f"✅ 봇 로그인됨: {client.user}")
@@ -59,7 +66,7 @@ async def on_message(message):
     elif content == '!목록':
         if menu_list:
             menu_text = "\n".join(f"{i+1}. {m}" for i, m in enumerate(menu_list))
-            await message.channel.send(f'🍽️ 현재 메뉴 목록:\n{menu_text}')
+            await send_long_message(message.channel, f'🍽️ 현재 메뉴 목록:\n{menu_text}')
         else:
             await message.channel.send("⚠️ 아직 메뉴가 없어요!")
     elif content == '!추천':
