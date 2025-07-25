@@ -85,6 +85,8 @@ async def on_message(message):
         else:
             await message.channel.send("⚠️ 아직 메뉴가 없어요!")
 
+    elif content == '!백업':
+    await message.channel.send(file=discord.File("menu.json"))
 
     elif content == '!추천':
         if menu_list:
