@@ -65,10 +65,21 @@ async def on_message(message):
                 await message.channel.send('⚠️ 메뉴 이름을 입력해 주세요.')
     elif content == '!목록':
         if menu_list:
-            menu_text = "\n".join(f"{i+1}. {m}" for i, m in enumerate(menu_list))
-            await send_long_message(message.channel, f'🍽️ 현재 메뉴 목록:\n{menu_text}')
+            menu_text = ""
+            chunks = []
+            for i, m in enumerate(menu_list, 1):
+                line = f"{i}. {m}\n"
+                if len(menu_text) + len(line) > 1900:  # 안전하게 1900자 기준
+                    chunks.append(menu_text)
+                    menu_text = ""
+                menu_text += line
+            chunks.append(menu_text)
+
+            for chunk in chunks:
+                await message.channel.send(f'🍽️ 현재 메뉴 목록:\n{chunk}')
         else:
             await message.channel.send("⚠️ 아직 메뉴가 없어요!")
+
     elif content == '!추천':
         if menu_list:
             menu = random.choice(menu_list)
